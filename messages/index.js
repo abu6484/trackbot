@@ -7,10 +7,6 @@ var restify = require('restify');
 var path = require('path');
 var database = require(path.join(__dirname, "./Database.js"));
 var env = require('dotenv');
-var Table = require('cli-table');
-var phone = require('phone-regex');
-var email = require('regex-email');
-var ProgressBar = require('progress');
 var botbuilder_azure = require('botbuilder-azure');
 //var Lowercase = require('lower-case');
 
@@ -206,7 +202,7 @@ bot.dialog('greet', new builder.SimpleDialog(function (session, results) {
     //
     
     
-   session.userData[UserNameKey]=custUser;
+  
 })   /* if(Search =="Exit")
     {
        session.endDialog("Thank you! It was nice speaking to you. Have a nice day");
@@ -239,6 +235,7 @@ else{
 
          // var Search  = session.message.text; 
          var intent  = Search.split('=');
+         session.userData[UserNameKey]=custUser;
 
          if (Search.toLowerCase() =="hi" ||Search.toLowerCase() =="hello" || Search.toLowerCase() =="hey" ){ 
             session.reset("greet");
@@ -500,63 +497,3 @@ function LuisAjax(statement,session){
     }); 
 }
 
-
-
-
-
-// (session, args, next) => 
-// {   
-//     var AWBNumber = session.message.text.match(/\d[\d\.]*/g);
-//     if (AWBNumber == null)
-//         session.send('Please enter AWB number');
-//     else{
-//         //const query = builder.EntityRecognizer.findEntity(session.message.text, 'awb');
-//         session.privateConversationData["textsearch"] = session.message.text;
-//         builder.Prompts.choice(
-//             session,"Please confirm AWB number is correct?",
-//             database.availableAWB,
-//             { listStyle: builder.ListStyle.button }
-//         )
-//     }   
-// },
-
-// var regexp = require('node-regexp');
-// var re = regexp()
-// .either('airway','awb','bill','look for','find','search','help')
-// .ignoreCase()
-// .toRegExp()
-// var boolval = re.test(statement);
-//AWBNumber = statement.match(/\d[\d\.]*/g);
-
-
-// reset bot dialog
-// bot.dialog('reset', function (session) {
-//     // reset data
-//     delete session.userData[UserNameKey];
-//     delete session.conversationData[CityKey];
-//     delete session.privateConversationData[CityKey];
-//     delete session.privateConversationData[UserWelcomedKey];
-//     session.endDialog('Ups... I\'m suffering from a memory loss...');
-// }).triggerAction({ matches: /^reset/i });    
-
-
-
-// LUIS
-//Enable Conversation Data persistence
-// var globalTunnel = require('global-tunnel');
-
-// globalTunnel.initialize({
-//     tunnel: 'both',
-//     host: '10.6.13.87',
-//     port: 8080
-//   }); 
-// var recognizer = new builder.LuisRecognizer(process.env.LUIS_MODEL_URL);
-// recognizer.onEnabled((context,callback)=>{
-//     if(context.dialogStack().length>0)
-//         callback(null,false);
-//     else
-//         callback(null,true);
-// });
-// bot.recognizer(recognizer);
-// globalTunnel.end(); 
-//Main Method
