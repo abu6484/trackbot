@@ -429,16 +429,17 @@ function LuisAjax(statement,session){
     else
     statement=statement;
     request({  
-        uri: 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/8f41d0fb-d7f1-4f6f-87e4-d3ece31ba8c0',
+        uri: 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/6f1605d5-b7c9-4692-94a7-5b33f0d9a0b7',   
+        
         method: "POST",
         body : "'" + statement.toString() + "'",
         parameters: {
             'verbose': true,
             'timezoneOffset': 5.5,
-            'subscription-key': '3576f9b91fdf4762b5a0dd790e68a1af',
+            'subscription-key': '50e406712b5f423fbc990e8c3795ec58',
         },
         headers: {
-            'Ocp-Apim-Subscription-Key' : '3576f9b91fdf4762b5a0dd790e68a1af',
+            'Ocp-Apim-Subscription-Key' : '50e406712b5f423fbc990e8c3795ec58',
         },
         //agent: agent,
         timeout: 10000,
