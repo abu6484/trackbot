@@ -100,47 +100,18 @@ bot.dialog('GetUserData', [
         var list3 =[];   
 
         var input =  session.userData[UserNameKey];
+        var inputemail = input.replace("U+0040;","@");      
+       database.awb.forEach(function (element) {
+            if ((element.EmailId.toString() == input.toLowerCase() || element.Mobile.toString() == input) && element.ShipmentDelivered =="Yet to deliver") {
+                list.push(element.key)  
+            }
+        })    
 
-        var inputemail = input.replace("U+0040;","@");
-      
-       // var Mobcheck  =  phone().test(input);
-       // var EmailCheck = email.test(input);
-       // if(Mobcheck){var Mobile = input;}
-        //else if(EmailCheck){{var Email = input;}}
-        //else{builder.Prompts.text(session,'PLease enter valid phone number or Email ID')}
-        database.awb.forEach(function(element) {
-            if(element.EmailId.toString()== inputemail.toLowerCase() || element.Mobile.toString()== inputemail ){
-                 list.push(element.key)   
-                for(var i=0 ; i<list.length;i++)
-                {
-                    if(element.key.toString()== list[i]){                        
-                        list2.push(element.ShipmentDelivered)
-                    }
-
-                }
-                            
-            }            
-        })
-         //console.log(list2);
-         //console.log( list2.find["Yet to deliver"]);
-         var list3_no = list3.length;
-         for(var i =0; i<list2.length;i++)
-         { 
-           if(list2[i] =="Yet to deliver")  
-           {
-               list3[i] =list[i];
-               list3_no++;
-           }
-         }
-        
-         list3_no = list3.length;
-
-         if(list.length>0)
-         {
-          //list[list3.length+1] = 'None of the above';
-          list3[list3_no+1]='None of the above';
-          builder.Prompts.choice(session, 'Aha! Here are the AWB numbers on your name. Can you please select any one from list?', list3,{ listStyle: builder.ListStyle.button });
-          //builder.Prompts.choice(session, 'Not from the list', ['Not from the list'],{ listStyle: builder.ListStyle.button });
+        //creating the list for the user selection
+        if (list.length > 0) {   
+            list.push('None of the above')
+            builder.Prompts.choice(session, 'Aha! Here are the AWB numbers on your name. Can you please select any one from list?', list, { listStyle: builder.ListStyle.button });
+            
         }
 
         else{            
