@@ -101,7 +101,7 @@ bot.dialog('GetUserData', [
 
         var input =  session.userData[UserNameKey];
 
-        var inputemail = input.replace("&#x0040;","@");
+        var inputemail = input.replace("U+0040","@");
       
        // var Mobcheck  =  phone().test(input);
        // var EmailCheck = email.test(input);
@@ -180,7 +180,7 @@ bot.dialog('greet', new builder.SimpleDialog(function (session, results) {
 //--------------
 
     //console.log(session.message.text);
-    var custUser = Search.replace("&#x0040;","@");
+    var custUser = Search.replace("U+0040","@");
 
     //-------------------
     var name= "";
