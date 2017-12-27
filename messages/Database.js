@@ -142,7 +142,7 @@ awb.push(
     shipmentready:'18/11/2017',
     Name: "Nils Fenner",
     EmailId: "nils@abb.ch",
-    Company: "Roche Diagnostics",
+    Company: "ABB",
     Mobile :"7676767678",
     Description : " Your shipment 74212345678 has been loaded on flight LX123 departing from MAD on 03.02.2017 at 9:05. Flight LX123 has departed  from MAD on 03.02.2017 at 9:05. Flight LX123 has arrived in ZRH on  03.02.2017 at 9:05. ",
     value: "Aircraft movement inbound (multi leg)"
@@ -152,7 +152,7 @@ awb.push(
     shipmentready:'18/11/2017',
     Name: "Nils Fenner",
     EmailId: "nils@abb.ch",
-    Company: "Roche Diagnostics",
+    Company: "ABB",
     Mobile :"7676767678",
     Description : "Your shipment 74112345678 has been unloaded in ZRH from flight LX123 on 03.02.2017 at 9:55. It will continue its journey toward JNB on flight LX123, departure planned on 10.02.2017 at 15:30.",
     value: "Freight received at destination (multi leg)"
@@ -162,7 +162,7 @@ awb.push(
     shipmentready:'18/11/2017',
     Name: "Nils Fenner",
     EmailId: "nils@abb.ch",
-    Company: "Roche Diagnostics",
+    Company: "ABB",
     Mobile :"7676767678",
     Description: "Flight LX123 has arrived in ZRH on  03.02.2017 at 9:05.",
     value: "Aircraft movement inbound"
@@ -173,7 +173,7 @@ awb.push(
     shipmentdeparted:'18/11/2017',
     Name: "Nils Fenner",
     EmailId: "nils@abb.ch",
-    Company: "Roche Diagnostics",
+    Company: "ABB",
     Mobile :"7676767678",
     Description : "Your shipment 74312345658 has been unloaded in ZRH from flight LX123 on 03.02.2017 at 9:55. Itbe soon ready for pick up.",
     value: "Freight received at destination"
@@ -184,7 +184,7 @@ awb.push(
     shipmentdeparted:'18/11/2017',
     Name: "Christian Piguet",
     EmailId: "christian@csem.ch",
-    Company: "Roche Diagnostics",
+    Company: "CSEM",
     Mobile :"7676767678",
     Description : "Your shipment 74312333658 has been picked up and handed overs to you in JNB at 16.45 on 10.02.2017.",
     value: "Physical shipment delivery"
@@ -193,9 +193,9 @@ awb.push(
     key:   "74312399658",
     shipmentready:'18/11/2017',
     shipmentdeparted:'18/11/2017',
-    Name: "Eva Goldschmidt",
+    Name: "Christian Piguet",
     EmailId: "christian@csem.ch",
-    Company: "Roche Diagnostics",
+    Company: "CSEM",
     Mobile :"7676767678",
     Description : "We are really sorry but your shipement 74312399658 has experienced an irregularity in MAD: the shipment has not been loaded as initially booked, due to non delivery by agent.  For more details, please visit our Track and trace tool or contact your local office. ",
     value: "Irreg. With reason code"
@@ -206,7 +206,7 @@ awb.push(
     shipmentdeparted:'18/11/2017',
     Name: "Christian Piguet",
     EmailId: "christian@csem.ch",
-    Company: "Roche Diagnostics",
+    Company: "CSEM",
     Mobile :"7676767678",
     Description : "We are really sorry but your shipement 74312300658 has experienced an irregularity in MAD. Please visit our Track and trace tool or contact your local office. ",
     value: "Irreg. With no reason code"
@@ -217,7 +217,7 @@ awb.push(
     shipmentdeparted:'18/11/2017',
     Name: "Christian Piguet",
     EmailId: "christian@csem.ch",
-    Company: "Roche Diagnostics",
+    Company: "CSEM",
     Mobile :"7676767678",
     Description : "Your shipment 74323456789 is ready for pick up at EWR. It can be collected within opening hours.",
     value: "Notification to customer"
