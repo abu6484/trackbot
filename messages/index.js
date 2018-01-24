@@ -8,11 +8,12 @@ var path = require('path');
 var database = require(path.join(__dirname, "./Database.js"));
 var env = require('dotenv');
 var botbuilder_azure = require('botbuilder-azure');
+var EmailId_arg = "";
 //var Lowercase = require('lower-case');
 
 env.config();
 
-var useEmulator = (process.env.NODE_ENV == 'development');
+var useEmulator =(process.env.NODE_ENV == 'development');
 
 var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure.BotServiceConnector({
     appId: process.env['MicrosoftAppId'],
@@ -55,6 +56,7 @@ var HelpMessage = '';
 var UserNameKey;
 var UserWelcomedKey;
 var emailIdMobile = '';
+var AWB_arg='';
 // var urls = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/8f41d0fb-d7f1-4f6f-87e4-d3ece31ba8c0?subscription-key=3576f9b91fdf4762b5a0dd790e68a1af&verbose=true&timezoneOffset=5.5&q=";
 // var emailMessage ="-----Original Message----- From: ORD Dario Hernandez [mailto:dhernandez@worldcourier.com] Sent: Montag, 17. Juli 2017 16:32 To: WERNER, WILLIAM ; SLAVIC, ZEMKA SWISS ; SESTIC, MIRJANA ; MCREDMOND, DANIEL Cc: ORD Operations Subject: MAWB#724-61316824 JOB#4686 XPRESSO SERVICE Please provide us with a booking as per the following information: MAWB: 724-61316824 Pieces: 4 pieces Weight: 158.8 KGS Dims: 3 @ 33x18x19 IN & 1 @ 16x16x16 IN Commodity: RESEARCH SAMPLES / UN1845,DRY ICE,9 – 1 X 15 KGS & 3 X 30 KGS Routing: ORD – ZRH Flights: LX 009 / 17 JULY Service: XPRESSO Screened: YES If you need anything further, please feel free to contact us Dario Hernandez World Courier, an AmerisourceBergen company Operations Agent ORD 3737 N. 25th Avenue Schiller Park, IL, 60176 Tel: 1-630-694-9077 Fax: 1-630-694-9070 www.worldcourier.com _____ World Courier, Inc. Registered office: 1313 Fourth Avenue, New Hyde Park, New York, 11040, USA. This e-mail, including any attachments, may contain confidential and/or privileged information. It is for the sole use of the intended recipient. If you have received it in error, please notify the sender immediately and delete it from your system. Any unauthorised copying, disclosure, distribution, use or retention of this e-mail or the information in it is strictly forbidden. Please note we reserve the right to monitor all e-mail communication for quality assurance, policy compliance and/or security purposes. Play your part in saving the environment - please do not print this e-mail unless absolutely necessary "
 
@@ -100,23 +102,25 @@ bot.dialog('GetUserData', [
         var list2 =[];
         var list3 =[];   
 
-        var input =  session.userData[UserNameKey];
+        var input = EmailId_arg; //session.userData[UserNameKey];
         var inputemail = input.replace("U+0040;","@");      
        database.awb.forEach(function (element) {
             if ((element.EmailId.toString() == emailIdMobile.toLowerCase() || element.Mobile.toString() == emailIdMobile) ) {
-                list.push(element.key)  
+        
+               if(element.key != AWB_arg ) {
+                list.push(element.key)  }
             }
         })    
 
         //creating the list for the user selection
         if (list.length > 0) {   
             list.push('None of the above')
-            builder.Prompts.choice(session, 'Aha! Here are the AWB numbers on your name. Can you please select any one from list?', list, { listStyle: builder.ListStyle.button });
+            builder.Prompts.choice(session, 'We also found some other AWB numbers on your name. Can you please select any one from list?', list, { listStyle: builder.ListStyle.button });
             
         }
 
         else{            
-            builder.Prompts.text(session,'Oh! I could not find an AWB number for the details that you entered. Is it possible to check and please enter the valid AWB number?')// try to add choices
+            builder.Prompts.text(session,'I could not find an AWB number for the details that you entered. Is it possible to check and please enter the valid AWB number?')// try to add choices
         }
    
       
@@ -133,7 +137,7 @@ bot.dialog('GetUserData', [
           function (session, result) {
             var intent  = session.message.text.split('=');
             if(intent[1]=="Track By AWB Number"){
-            builder.Prompts.text(session, 'Oh! If you could not find the number in the above list, I request you to kindly enter AWB/Flight number to search')
+            builder.Prompts.text(session, 'If you could not find the number in the above list, I request you to kindly enter AWB/Flight number to search')
            }       
               //LuisAjax(session.message.text,session);          
           }          
@@ -158,14 +162,18 @@ bot.dialog('greet', new builder.SimpleDialog(function (session, results) {
     var name= "";
     var company="";
 
+
     //var Mobcheck  =  phone().test(custUser);
     //var EmailCheck = email.test(custUser);
    // console.log(custUser);
     //    if(Mobcheck || EmailCheck){
     database.awb.forEach(function(element){
-       if(element.EmailId.toString() == custUser.toLowerCase() || element.Mobile.toString()== custUser){            
+        //element.EmailId.toString() == custUser.toLowerCase()
+        //element.Mobile.toString()== custUser ||
+       if(element.key.toString()== custUser  ){            
            name=element.Name;
            company=element.Company;
+           EmailId_arg = element.EmailId;
            //console.log(name);
            //console.log(element.Name);
            //console.log(company);
@@ -237,11 +245,19 @@ else{
           var messagess = new builder.Message(session).attachments([thumbnail]);
            
           session.send(messagess);
-          emailIdMobile = session.message.text;
+          AWB_arg= session.message.text;
+
+          emailIdMobile = EmailId_arg;//session.message.text;
+          
          }
            //session.endDialog('Welcome to Swiss Cargo AWB/Flight search.Welcome %s! %s', HelpMessage);
      }
      else if(intent[1]=="Track Shipment"){
+        database.awb.forEach(function(element) {
+            if(element.key.toString()== AWB_arg){
+                  session.send(element.Description );
+                  session.send("[Click here or detailed tracking](https://www.swissworldcargo.com/track_n_trace)");                      
+            }});
         session.beginDialog('GetUserData');       
            //builder.Prompts.choice(session, 'Please select any one from list', list1,{ listStyle: builder.ListStyle.button });     
      }
@@ -252,7 +268,7 @@ else{
           thumbnail.images([builder.CardImage.create(session,'https://i3ltrackbotdemo.blob.core.windows.net/images/image-humanoid.PNG')]);
           //thumbnail.images([builder.CardImage.create(session,"C:/Users/Public/Pictures/Sample Pictures/girl-icon.PNG")]);          
          // thumbnail.images([builder.CardImage.create(session,"C:/Users/Public/Pictures/Sample Pictures/Swiss.PNG")]);
-          var text = '\n\rHey, I am Alan from Swiss World Cargo. \r\n Email-id: alan@swisscargo.com.\r\nCan you please provide your email address or phone number?';
+          var text = '\n\rHey, I am Alan from Swiss World Cargo. \r\n Email-id: alan@swisscargo.com.\r\n Please indentify your self by providing awb number ?';
           thumbnail.text(text);
           thumbnail.tap(new builder.CardAction.openUrl(session,"https://www.swissworldcargo.com/about_us/company/our_story"));
           //thumbnail.buttons([new builder.CardAction.dialogAction(session," ","",""),new builder.CardAction.openUrl(session,"https://www.swissworldcargo.com/en/web/20184/station-info","Contact US")])      
@@ -316,7 +332,7 @@ bot.dialog('Note.Search', [
                 //    {
                 //    tableHTML = '<table style="padding:10px;border:1px solid black;"><tr><td>AWB Number :'+element.key+'<td><td><img src='+"C:/Users/19242/Pictures/abb.PNG"+'></img></td></tr></table><table style="padding:10px;border:1px solid black;"><tr ><th style="background-color:#c6c6c6;width:100px;hight:200px">Shipment Ready For Carriage </th><td style="background-color:#008000;width:4px"></td > <td align="center">'+element.shipmentready +'</td><td align="center">'+element.Itemcount +'</td></tr><tr ><th style="background-color:#c6c6c6">Shipment Departed</th><td style="background-color:#008000;width:4px"></td > <td align="center">'+element.shipmentdeparted +'</td><td align="center">'+element.Itemcount +'</td></tr><tr ><th style="background-color:#c6c6c6">Flight Departure </th><td style="background-color:#008000;width:4px"></td > <td align="center">'+element.flightdeparture +'</td><td align="center">'+element.Itemcount +'</td></tr><tr ><th style="background-color:#c6c6c6;width:100px;hight:200px">&nbsp</th> <td align="center"></td><td align="center"></td></tr><tr ><th style="background-color:#c6c6c6;width:100px;hight:200px"> &nbsp</th></td> <td align="center"></td><td align="center"></td></tr><tr ><th style="background-color:#c6c6c6;width:100px;hight:200px">&nbsp  </th> <td align="center"></td><td align="center"></td></tr><tr ><th style="background-color:#c6c6c6;width:100px;hight:200px"></th><td style=width:4px"></td > <td align="center">'+element.ShipmentDelivered +'</td><td align="center">'+element.Itemcount +'</td></tr></table>';
                       //tableHTML = '<table style="padding:10px;border:1px solid black;"><tr><td>AWB Number :'+element.key+'<td><td><img src='+"https://i3ltrackbotdemo.blob.core.windows.net/images/abb.PNG"+'></img></td></tr></table><table style="padding:10px;border:1px solid black;"><tr ><td style="background-color:#c6c6c6;width:100px;hight:200px">Shipment Ready For Carriage </td><td style="background-color:#008000;width:3px;border-left: 1px solid black;border-right: 1px solid black;"></td > <td align="center">'+element.shipmentready +'</td><td align="center">'+element.Itemcount +'</td></tr><tr ><td style="background-color:#c6c6c6">Shipment Departed</td><td style="background-color:#008000;width:3pxp;border-left: 1px solid black;border-right: 1px solid black;"></td > <td align="center">'+element.shipmentdeparted +'</td><td align="center">'+element.Itemcount +'</td></tr><tr ><td style="background-color:#c6c6c6">Flight Departure </td><td style="background-color:#008000;width:3px;border-left: 1px solid black;border-right: 1px solid black;"></td > <td align="center">'+element.flightdeparture +'</td><td align="center">'+element.Itemcount +'</td></tr><tr ><th style="background-color:;width:100px;hight:200px">&nbsp</th> <td align="center" style="width:3px;border-left: 1px solid black;border-right: 1px solid black;"></td><td align="center"></td></tr><tr ><th style="background-color:;width:100px;hight:200px"> &nbsp</th></td> <td align="center></td><td align="center style="width:3px;border-left: 1px solid black;border-right: 1px solid black;"></td></tr><tr ><th style="background-color:;width:100px;hight:200px">&nbsp  </th> <td align="center"; style="width:3px;border-left: 1px solid black;border-right: 1px solid black;"></td><td align="center";></td></tr><tr ><th style="background-color:;width:100px;hight:200px"></th><td style="width:3px;border-left: 1px solid black;border-right:  1px solid black;"></td > <td align="center">'+element.ShipmentDelivered +'</td><td align="center">'+element.Itemcount +'</td></tr></table>';
-                      session.send(element.value + '<br/>' + element.Description );
+                      session.send(element.Description );
                       session.send("[Click here or detailed tracking](https://www.swissworldcargo.com/track_n_trace)");    
                       //    }
                 // else{
