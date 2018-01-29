@@ -125,7 +125,7 @@ bot.dialog('GetUserData', [
             list.push('None of the above')
             list.push('Discontinue')
             
-            builder.Prompts.choice(session, 'We also found some other AWB numbers on your name. You can select any one from list to track the status?', list, { listStyle: builder.ListStyle.button });     
+            builder.Prompts.choice(session, 'We also found some other AWB numbers on your name. You can get their status by clicking on the relevent AWB number or come out of the process by clicking on discontinue ?', list, { listStyle: builder.ListStyle.button });     
             
         }
        
