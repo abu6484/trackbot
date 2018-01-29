@@ -13,7 +13,7 @@ var EmailId_arg = "";
 
 env.config();
 
-var useEmulator =(process.env.NODE_ENV == 'development');
+var useEmulator = (process.env.NODE_ENV == 'development');
 
 var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure.BotServiceConnector({
     appId: process.env['MicrosoftAppId'],
@@ -79,6 +79,10 @@ var bot = new builder.UniversalBot(connector, [
             session.reset("greet");
          }
 
+         if (session.message.text.toLowerCase() =="discontinue"){ 
+            session.endConversation("Thank you! It was nice speaking to you. Have a nice day...");
+         }
+
         else {
             //if(session.message.text.length !=11)
            // {
@@ -101,6 +105,7 @@ bot.dialog('GetUserData', [
         var list  =[];
         var list2 =[];
         var list3 =[];   
+        
 
         var input = EmailId_arg; //session.userData[UserNameKey];
         var inputemail = input.replace("U+0040;","@");      
@@ -113,11 +118,17 @@ bot.dialog('GetUserData', [
         })    
 
         //creating the list for the user selection
-        if (list.length > 0) {   
+        
+        
+        if (list.length > 0){   
+   
             list.push('None of the above')
-            builder.Prompts.choice(session, 'We also found some other AWB numbers on your name. Can you please select any one from list?', list, { listStyle: builder.ListStyle.button });
+            list.push('Discontinue')
+            
+            builder.Prompts.choice(session, 'We also found some other AWB numbers on your name. You can select any one from list to track the status?', list, { listStyle: builder.ListStyle.button });     
             
         }
+       
 
         else{            
             builder.Prompts.text(session,'I could not find an AWB number for the details that you entered. Is it possible to check and please enter the valid AWB number?')// try to add choices
@@ -437,10 +448,15 @@ function LuisAjax(statement,session){
     }, function(error, response, body) {    
         var luisresult = JSON.parse(body);
         if(luisresult.topScoringIntent.intent=='Note.Search'){
-            if(   luisresult.entities[0] != undefined){
+            if(luisresult.entities[0] != undefined){
                 var args = luisresult.entities[0].entity.replace(/\s/g, '');
                 session.beginDialog('Note.Search',args);
                 }
+
+           else if (session.message.text.toLowerCase() =="discontinue"){ 
+                    session.endConversation("Thank you! It was nice speaking to you. Have a nice day...");
+                 }
+
                 else{session.send("Please enter Valid AWB/Flight number to search");}
             
         }
@@ -450,6 +466,7 @@ function LuisAjax(statement,session){
                 var args = luisresult.entities[0].entity.replace(/\s/g, '');
                 session.beginDialog('Note.Flight',args);
             }
+          
             else{session.send("Please enter Valid AWB/Flight number to search");}
             
         }
