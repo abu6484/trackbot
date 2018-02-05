@@ -13,7 +13,7 @@ var EmailId_arg = "";
 
 env.config();
 
-var useEmulator =(process.env.NODE_ENV == 'development');
+var useEmulator = (process.env.NODE_ENV == 'development');
 
 var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure.BotServiceConnector({
     appId: process.env['MicrosoftAppId'],
@@ -169,13 +169,13 @@ bot.dialog('GetUserData', [
          if (Search  == "Discontinue" || intent[1] == "Discontinue"){
             session.endConversation("Thank you! It was nice speaking to you. Have a nice day...");      
         }
-        else if (Search == "Do you want track any other shipment"){
+        else if (Search == "Do you want to track any other shipment"){
             session.beginDialog("EndMethod");
         }
         else if (intent[1] == "Track Shipment"){
             session.send("Please provide your AWB Number?");
         }
-        else if (!session.privateConversationData[UserWelcomedKey] && intent[1] != "Track Shipment" && session.message.text.length != 11){
+        else if (!session.privateConversationData[UserWelcomedKey] && intent[1] != "Track Shipment" && session.message.text.length <= 11){
             var thumbnail = new builder.ThumbnailCard(session);
             thumbnail.title("Welcome to Swiss World Cargo");
             thumbnail.images([builder.CardImage.create(session, 'https://i3ltrackbotdemo.blob.core.windows.net/images/image-humanoid.PNG')]);
@@ -209,13 +209,13 @@ bot.dialog('MainMethod', [
 
 bot.dialog('EndMethod', [
     (session, args) => {
-        if (session.message.text.length >= 11 && session.message.text != "Do you want track any other shipment") {
+        if (session.message.text.length >= 11 && session.message.text != "Do you want to track any other shipment") {
             LuisAjax(session.message.text, session);
             //session.reset();
         }
         else {
             // session.cancelDialog();
-            session.send("Please enter a valid awb number ?");
+            session.send("Please provide your AWB Number ?");
         }
 
     }
@@ -231,7 +231,7 @@ bot.dialog('Note.Search', [
         var list = [2];
         //list.push("Exit");
         
-        list[0] = ("Do you want track any other shipment");
+        list[0] = ("Do you want to track any other shipment");
         list[1] = ("Discontinue");
         if (AWBNumber.length != 11)
             session.send('Invalid AWB Number format. Please enter valid AWB number in format 1XX12XXXX78');
@@ -268,7 +268,7 @@ bot.dialog('Note.Search', [
                     //session.send(message);
 
                     // session.send('Thank You! I hope I could help you in tracking your shipment. For all other information, request you to kindly contact directly over the phone.');
-                    builder.Prompts.choice(session, 'Please select any one from list ?', list, { listStyle: builder.ListStyle.button }),
+                    builder.Prompts.choice(session, 'Please select any one option from list ?', list, { listStyle: builder.ListStyle.button }),
                         ///  function(session,result){
                         //  var check = session.message.text();
                         // if(check =="contu"){
