@@ -175,7 +175,7 @@ bot.dialog('GetUserData', [
         else if (intent[1] == "Track Shipment"){
             session.send("Please provide your AWB Number?");
         }
-        else if (!session.privateConversationData[UserWelcomedKey] && intent[1] != "Track Shipment" && session.message.text.length <= 11){
+        else if (!session.privateConversationData[UserWelcomedKey] && intent[1] != "Track Shipment" && session.message.text.length < 11){
             var thumbnail = new builder.ThumbnailCard(session);
             thumbnail.title("Welcome to Swiss World Cargo");
             thumbnail.images([builder.CardImage.create(session, 'https://i3ltrackbotdemo.blob.core.windows.net/images/image-humanoid.PNG')]);
