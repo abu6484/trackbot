@@ -268,7 +268,7 @@ bot.dialog('Note.Search', [
                     //session.send(message);
 
                     // session.send('Thank You! I hope I could help you in tracking your shipment. For all other information, request you to kindly contact directly over the phone.');
-                    builder.Prompts.choice(session, 'Please select any one option from the following list ?', list, { listStyle: builder.ListStyle.button }),
+                    builder.Prompts.choice(session, 'Please select any one option from the following list', list, { listStyle: builder.ListStyle.button }),
                         ///  function(session,result){
                         //  var check = session.message.text();
                         // if(check =="contu"){
@@ -286,7 +286,7 @@ bot.dialog('Note.Search', [
             }, this);
 
             if (!match)
-                session.send('AWB not found. Please enter valid AWB number');
+                session.send('Please provide a valid AWB number');
         }
     }
 ]).triggerAction({ matches: 'Note.Search' });
@@ -367,7 +367,7 @@ function LuisAjax(statement, session) {
                 session.beginDialog('Note.Flight', args);
             }
 
-            else { session.send("Please enter Valid AWB/Flight number to search"); }
+            else { session.send("Please provide a valid AWB number"); }
 
         }
         else if (luisresult.topScoringIntent.intent == 'None') {
@@ -388,7 +388,7 @@ function LuisAjax(statement, session) {
                 session.reset("greet");
             }
             else {
-                session.send("Please enter Valid AWB number to search");
+                session.send("Please provide a valid AWB number");
                
             }
         }
