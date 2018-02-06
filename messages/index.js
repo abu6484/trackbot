@@ -173,7 +173,7 @@ bot.dialog('GetUserData', [
             session.beginDialog("EndMethod");
         }
         else if (intent[1] == "Track Shipment"){
-            session.send("Please enter an AWB number so I can start tracking your cargo?");
+            session.send("Please enter an AWB number so I can start tracking your cargo");
         }
         else if (!session.privateConversationData[UserWelcomedKey] && intent[1] != "Track Shipment" && session.message.text.length < 11){
             var thumbnail = new builder.ThumbnailCard(session);
@@ -215,7 +215,7 @@ bot.dialog('EndMethod', [
         }
         else {
             // session.cancelDialog();
-            session.send("Please enter an AWB number so I can start tracking your cargo ?");
+            session.send("Please enter an AWB number so I can start tracking your cargo ");
         }
 
     }
