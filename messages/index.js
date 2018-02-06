@@ -169,11 +169,11 @@ bot.dialog('GetUserData', [
          if (Search  == "Discontinue" || intent[1] == "Discontinue"){
             session.endConversation("Thank you! It was nice speaking to you. Have a nice day...");      
         }
-        else if (Search == "Do you want to track any other shipment"){
+        else if (Search == "Track another Shipment"){
             session.beginDialog("EndMethod");
         }
         else if (intent[1] == "Track Shipment"){
-            session.send("Please provide your AWB Number?");
+            session.send("Please enter an AWB number so I can start tracking your cargo?");
         }
         else if (!session.privateConversationData[UserWelcomedKey] && intent[1] != "Track Shipment" && session.message.text.length < 11){
             var thumbnail = new builder.ThumbnailCard(session);
@@ -181,7 +181,7 @@ bot.dialog('GetUserData', [
             thumbnail.images([builder.CardImage.create(session, 'https://i3ltrackbotdemo.blob.core.windows.net/images/image-humanoid.PNG')]);
             //thumbnail.images([builder.CardImage.create(session,"C:/Users/Public/Pictures/Sample Pictures/girl-icon.PNG")]);          
             // thumbnail.images([builder.CardImage.create(session,"C:/Users/Public/Pictures/Sample Pictures/Swiss.PNG")]);
-            var text = '\n\r I am a bot and I can support you with. \r\n';
+            var text = '\n\r Hi, I am Heidi, your Swiss WorldCargo virtual assistant. I can help you with tracking shipments or finding contacts. I am constantly learning and soon I will be able to assist you in other situations as well. What would you like to do ?. \r\n';
             thumbnail.text(text);
             thumbnail.tap(new builder.CardAction.openUrl(session, "https://www.swissworldcargo.com/about_us/company/our_story"));
             thumbnail.buttons([new builder.CardAction.dialogAction(session, " ", "Track Shipment", "Track Shipment"), new builder.CardAction.openUrl(session, "https://www.swissworldcargo.com/en/web/20184/station-info", "Contact US"),new builder.CardAction.dialogAction(session, " ", "Discontinue", "Discontinue")])
@@ -209,13 +209,13 @@ bot.dialog('MainMethod', [
 
 bot.dialog('EndMethod', [
     (session, args) => {
-        if (session.message.text.length >= 11 && session.message.text != "Do you want to track any other shipment") {
+        if (session.message.text.length >= 11 && session.message.text != "Track another Shipment") {
             LuisAjax(session.message.text, session);
             //session.reset();
         }
         else {
             // session.cancelDialog();
-            session.send("Please provide your AWB Number ?");
+            session.send("Please enter an AWB number so I can start tracking your cargo ?");
         }
 
     }
@@ -231,7 +231,7 @@ bot.dialog('Note.Search', [
         var list = [2];
         //list.push("Exit");
         
-        list[0] = ("Do you want to track any other shipment");
+        list[0] = ("Track another Shipment");
         list[1] = ("Discontinue");
         if (AWBNumber.length != 11)
             session.send('Invalid AWB Number format. Please enter valid AWB number in format 1XX12XXXX78');
@@ -367,7 +367,7 @@ function LuisAjax(statement, session) {
                 session.beginDialog('Note.Flight', args);
             }
 
-            else { session.send("Please enter Valid AWB/Flight number to search"); }
+            else { session.send("Please enter an AWB number so I can start tracking your cargo"); }
 
         }
         else if (luisresult.topScoringIntent.intent == 'None') {
@@ -388,7 +388,7 @@ function LuisAjax(statement, session) {
                 session.reset("greet");
             }
             else {
-                session.send("Please enter Valid AWB number to search");
+                session.send("Please enter an AWB number so I can start tracking your cargo");
                
             }
         }
